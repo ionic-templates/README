@@ -1,0 +1,35 @@
+#!/bin/bash
+
+RUN() {
+	NR="$1";	shift
+
+	printf "RUN: %1d: %s\n" "$NR" "$*"
+	#printf "%s\n" "$*"
+	$*
+	# | grep '^RUN' | cut -d: -f2-
+}
+
+VERSION=$(ionic version)
+TEMPLATES="tabs sidemenu blank conference"
+HERE="$PWD"
+
+for TYP in angular react
+do
+	if [[ "$TYP" == "angular" ]]; then
+		_TEMPLATES="$TEMPLATES my-first-app"
+	else
+		_TEMPLATES="$TEMPLATES"
+	fi
+
+	for TEMPLATE in $_TEMPLATES
+	do
+		ROOT="${HERE}/${TYP}.${TEMPLATE}"
+
+		# setup archiv for currrent version
+		RUN 1 "mkdir -p    	${ROOT}"
+		RUN 1 "cd       	${ROOT}"
+
+		RUN 2 "rm -rf      	${VERSION}"
+		RUN 2 "ionic start 	${VERSION}        $TEMPLATE --type $TYP --no-link --no-deps --no-git"
+	done
+done

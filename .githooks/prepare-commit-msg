@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+_BRANCHPATH=$(git symbolic-ref -q HEAD)
+_BRANCH=${_BRANCHPATH##*/}
+
+LOG() {
+        if [[ "$GIT_COMMIT_DETAILED_LOGGING" == "YES" ]]; then
+                echo "LOG: $*"
+        fi
+}
+
+
+LOG "working on branch $_BRANCH"
+
+if [ -n "$_BRANCH" ]; then
+    echo "$_BRANCH | $(cat $1)" > $1
+
+    LOG "change commit message to: $(cat $1)"
+fi
